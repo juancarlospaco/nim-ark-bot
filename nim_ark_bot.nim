@@ -14,14 +14,14 @@ const
   ark_api_ver = "http://arkdedicated.com/version"
   ark_api_sta = "http://arkdedicated.com/officialserverstatus.ini"
   helps_texts = staticRead("help_text.md")
-  donate_text = readFile("donate_text.md")
-  mods_text   = readFile("mods_list.md")
 
 let
-  start_time = cpuTime()
-  config_ini = loadConfig("config.ini")
-  api_key    = config_ini.getSectionValue("", "api_key")
-  cli_colors = parseBool(config_ini.getSectionValue("", "terminal_colors"))
+  start_time  = cpuTime()
+  donate_text = readFile("donate_text.md")
+  mods_text   = readFile("mods_list.md")
+  config_ini  = loadConfig("config.ini")
+  api_key     = config_ini.getSectionValue("", "api_key")
+  cli_colors  = parseBool(config_ini.getSectionValue("", "terminal_colors"))
 
   cmd_help     = parseBool(config_ini.getSectionValue("commands", "help"))
   cmd_ping     = parseBool(config_ini.getSectionValue("commands", "ping"))
