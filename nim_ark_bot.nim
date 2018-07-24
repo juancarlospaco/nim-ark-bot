@@ -17,8 +17,6 @@ const
 
 let
   start_time  = cpuTime()
-  donate_text = readFile("donate_text.md")
-  mods_text   = readFile("mods_list.md")
   config_ini  = loadConfig("config.ini")
   api_key     = config_ini.getSectionValue("", "api_key")
   cli_colors  = parseBool(config_ini.getSectionValue("", "terminal_colors"))
@@ -99,11 +97,11 @@ proc helpHandler(bot: Telebot): CommandCallback =
 
 proc donateHandler(bot: Telebot): CommandCallback =
   handlerizer():
-    let message = donate_text
+    let message = readFile("donate_text.md")
 
 proc modsHandler(bot: Telebot): CommandCallback =
   handlerizer():
-    let message = mods_text
+    let message = readFile("mods_list.md")
 
 
 when defined(linux):
