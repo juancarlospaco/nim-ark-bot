@@ -50,7 +50,7 @@ let
   rcon_pass = config_ini.getSectionValue("rcon_server", "password")
   rcon_cmd = fmt"mcrcon -c -H {rcon_ip} -P {rcon_port} -p {rcon_pass} "
 
-  polling_interval: range[99..2000] = parseInt(config_ini.getSectionValue("", "polling_interval")).int32
+  polling_interval: int8 = parseInt(config_ini.getSectionValue("", "polling_interval")).int8
 
 var counter: int
 
@@ -205,7 +205,7 @@ proc main*() {.async.} =
     if ark_cmd_status:       bot.onCommand("status",      statusHandler(bot))
     if ark_cmd_mods:         bot.onCommand("mods",        modsHandler(bot))
 
-  bot.poll(polling_interval)
+  bot.poll(polling_interval * 1000)
 
 
 when isMainModule:
