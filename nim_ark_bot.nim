@@ -150,7 +150,7 @@ when defined(linux):
       let message = fmt"""`{execCmdEx(cmd)[0]}`"""
 
   proc nightHandler(bot: Telebot): CommandCallback =
-    let cmd = rcon_cmd & "'settimeofday 5:00'"
+    let cmd = rcon_cmd & "'settimeofday 4:00'"
     handlerizer:
       let message = fmt"""`{execCmdEx(cmd)[0]}`"""
 

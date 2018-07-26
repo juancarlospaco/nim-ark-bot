@@ -2,7 +2,7 @@
 api_key = ""
 # Telegram API Long-Pooling Interval, 1~127 is Valid (int8).
 polling_interval = 1
-# Terminal Colors
+# Terminal Colors (Color Blind support).
 terminal_colors = true
 
 
@@ -29,7 +29,7 @@ public_ip = false  # Allow any user to see the current Servers Public IP.
 
 # Enable / Disable Ark Survival Evolved Commands.
 [ark_commands]
-saveworld   = true    # Save the World.
+saveworld   = true    # Save the World (tiny Lag on server for 1 second when Saving).
 listplayers = true    # List Online In-Game Players.
 getchat     = true    # Get In-Game Chat.
 day         = true    # Make Day In-Game.
