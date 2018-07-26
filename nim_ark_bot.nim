@@ -205,7 +205,7 @@ proc main*() {.async.} =
     if ark_cmd_status:       bot.onCommand("status",      statusHandler(bot))
     if ark_cmd_mods:         bot.onCommand("mods",        modsHandler(bot))
 
-  bot.poll(polling_interval * 1000)
+  bot.poll(int32(polling_interval * 1000))
 
 
 when isMainModule:
