@@ -1,8 +1,7 @@
 import
   asyncdispatch, httpclient, logging, json, options, ospaths, osproc, parsecfg,
   strformat, strutils, terminal, times, random
-import telebot  # nimble install telebot https://nimble.directory/pkg/telebot
-
+import telebot  # nimble install telebot / https://nimble.directory/pkg/telebot / Version 0.3.3
 
 const
   about_texts = fmt"""*Nim Telegram Bot* 🤖
