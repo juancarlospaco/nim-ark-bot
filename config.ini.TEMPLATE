@@ -24,7 +24,7 @@ free      = true
 lshw      = true
 lsusb     = true
 lspci     = true
-public_ip = false  # Allow any user to see the current Servers Public IP.
+public_ip = true      # Allow any user to see the current Servers Public IP.
 
 
 # Enable / Disable Ark Survival Evolved Commands.
@@ -42,6 +42,6 @@ broadcast   = true    # Not Implemented yet.
 
 # Ark RCON Server Settings.
 [rcon_server]
-ip       = 127.0.0.1
-port     = 1234
-password = Passw0rd
+ip       = 127.0.0.1  # RCON IP (IPv4).
+port     = 1234       # RCON Port.
+password = Passw0rd   # RCON Password.
