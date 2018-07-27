@@ -1,6 +1,6 @@
 import
   asyncdispatch, httpclient, logging, json, options, ospaths, osproc, parsecfg,
-  strformat, strutils, terminal, times, random
+  strformat, strutils, terminal, times, random, posix
 import telebot  # nimble install telebot / https://nimble.directory/pkg/telebot / Version 0.3.3
 
 const
@@ -203,6 +203,11 @@ proc main*() {.async.} =
     if ark_cmd_lastversion:  bot.onCommand("lastversion", lastversionHandler(bot))
     if ark_cmd_status:       bot.onCommand("status",      statusHandler(bot))
     if ark_cmd_mods:         bot.onCommand("mods",        modsHandler(bot))
+
+    try:
+      discard nice(19.cint)  # Smooth CPU priority.
+    except Exception:
+      discard
 
   bot.poll(int32(polling_interval * 1000))
 
