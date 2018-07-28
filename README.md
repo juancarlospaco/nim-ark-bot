@@ -12,6 +12,7 @@ Ark Survival Evolved Dedicated Server Bot uses Telegram Chat API, Nim Programmin
 
 # Requisites
 
+- RCON Enabled in the Ark Server Settings.
 - The Bot does NOT require Nim installed.
 - The Bot does NOT require Telegram installed.
 
@@ -36,6 +37,7 @@ Your Linux Server needs to have some very basic trivial commands installed:
 - [Whats Telegram?.](https://telegram.org)
 - [Whats Nim?.](https://nim-lang.org)
 - [Whats Bot?.](https://core.telegram.org/bots)
+- This can work as "Cross Ark Chat"?. Yes, you need 1 Bot for each Ark Server.
 - Why not a Web Control Panel?. This can work with Servers with Dynamic Public IP address. No Databases.
 - Why not Discord?. Discord WebApp is buggy, Discord Desktop App is heavy, Discord eats like 6 Gigabytes of RAM, this weights 135 Kilobytes.
 
