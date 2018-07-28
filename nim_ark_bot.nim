@@ -35,14 +35,15 @@ let
   server_cmd_lspci = parseBool(config_ini.getSectionValue("linux_server_admin_commands", "lspci"))
   server_cmd_public_ip = parseBool(config_ini.getSectionValue("linux_server_admin_commands", "public_ip"))
 
-  ark_cmd_saveworld   = parseBool(config_ini.getSectionValue("ark_commands", "saveworld"))
-  ark_cmd_listplayers = parseBool(config_ini.getSectionValue("ark_commands", "listplayers"))
-  ark_cmd_getchat     = parseBool(config_ini.getSectionValue("ark_commands", "getchat"))
-  ark_cmd_day         = parseBool(config_ini.getSectionValue("ark_commands", "day"))
-  ark_cmd_night       = parseBool(config_ini.getSectionValue("ark_commands", "night"))
-  ark_cmd_lastversion = parseBool(config_ini.getSectionValue("ark_commands", "lastversion"))
-  ark_cmd_status      = parseBool(config_ini.getSectionValue("ark_commands", "status"))
-  ark_cmd_mods        = parseBool(config_ini.getSectionValue("ark_commands", "mods"))
+  ark_cmd_saveworld    = parseBool(config_ini.getSectionValue("ark_commands", "saveworld"))
+  ark_cmd_listplayers  = parseBool(config_ini.getSectionValue("ark_commands", "listplayers"))
+  ark_cmd_getchat      = parseBool(config_ini.getSectionValue("ark_commands", "getchat"))
+  ark_cmd_day          = parseBool(config_ini.getSectionValue("ark_commands", "day"))
+  ark_cmd_night        = parseBool(config_ini.getSectionValue("ark_commands", "night"))
+  ark_cmd_lastversion  = parseBool(config_ini.getSectionValue("ark_commands", "lastversion"))
+  ark_cmd_status       = parseBool(config_ini.getSectionValue("ark_commands", "status"))
+  ark_cmd_mods         = parseBool(config_ini.getSectionValue("ark_commands", "mods"))
+  ark_cmd_wilddinowipe = parseBool(config_ini.getSectionValue("ark_commands", "wilddinowipe"))
 
   rcon_ip   = config_ini.getSectionValue("rcon_server", "ip")
   rcon_port = config_ini.getSectionValue("rcon_server", "port")
@@ -153,6 +154,11 @@ when defined(linux):
     handlerizer:
       let message = fmt"""`{execCmdEx(cmd)[0]}`"""
 
+  proc wilddinowipeHandler(bot: Telebot): CommandCallback =
+    let cmd = rcon_cmd & "wilddinowipe"
+    handlerizer:
+      let message = fmt"""`{execCmdEx(cmd)[0]}`"""
+
   proc lastversionHandler(bot: Telebot): CommandCallback =
     handlerizer:
       let
@@ -195,14 +201,15 @@ proc main*() {.async.} =
     if server_cmd_lspci:     bot.onCommand("lspci", lspciHandler(bot))
     if server_cmd_public_ip: bot.onCommand("public_ip", public_ipHandler(bot))
 
-    if ark_cmd_saveworld:    bot.onCommand("saveworld",   saveworldHandler(bot))
-    if ark_cmd_listplayers:  bot.onCommand("listplayers", listplayersHandler(bot))
-    if ark_cmd_getchat:      bot.onCommand("getchat",     getchatHandler(bot))
-    if ark_cmd_day:          bot.onCommand("day",         dayHandler(bot))
-    if ark_cmd_night:        bot.onCommand("night",       nightHandler(bot))
-    if ark_cmd_lastversion:  bot.onCommand("lastversion", lastversionHandler(bot))
-    if ark_cmd_status:       bot.onCommand("status",      statusHandler(bot))
-    if ark_cmd_mods:         bot.onCommand("mods",        modsHandler(bot))
+    if ark_cmd_saveworld:    bot.onCommand("saveworld",    saveworldHandler(bot))
+    if ark_cmd_listplayers:  bot.onCommand("listplayers",  listplayersHandler(bot))
+    if ark_cmd_getchat:      bot.onCommand("getchat",      getchatHandler(bot))
+    if ark_cmd_day:          bot.onCommand("day",          dayHandler(bot))
+    if ark_cmd_night:        bot.onCommand("night",        nightHandler(bot))
+    if ark_cmd_lastversion:  bot.onCommand("lastversion",  lastversionHandler(bot))
+    if ark_cmd_status:       bot.onCommand("status",       statusHandler(bot))
+    if ark_cmd_mods:         bot.onCommand("mods",         modsHandler(bot))
+    if ark_cmd_wilddinowipe: bot.onCommand("wilddinowipe", wilddinowipeHandler(bot))
 
     try:
       discard nice(19.cint)  # Smooth CPU priority.
