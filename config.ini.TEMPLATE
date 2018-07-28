@@ -29,15 +29,18 @@ public_ip = true      # Allow any user to see the current Servers Public IP.
 
 # Enable / Disable Ark Survival Evolved Commands.
 [ark_commands]
-saveworld   = true    # Save the World (tiny Lag on server for 1 second when Saving).
-listplayers = true    # List Online In-Game Players.
-getchat     = true    # Get In-Game Chat.
-day         = true    # Make Day In-Game.
-night       = true    # Make Night In-Game.
-lastversion = true    # Show Latest Ark Survival Evolved Version.
-status      = true    # Show Ark Survival Evolved Network Status.
-mods        = true    # Show list of Mods, from "mods_list.md" file (manual).
-broadcast   = true    # Not Implemented yet.
+saveworld         = true  # Save the World (tiny Lag on server for 1 second).
+listplayers       = true  # List Online In-Game Players.
+getchat           = true  # Get In-Game Chat.
+getchat_admin_cmd = true  # getchat shows Admin Commands.
+day               = true  # Make Day In-Game.
+night             = true  # Make Night In-Game.
+lastversion       = true  # Show Latest Ark Survival Evolved Version.
+status            = true  # Show Ark Survival Evolved Network Status.
+mods              = true  # Show list of Mods, from "mods_list.md" file (manual).
+destroywilddinos  = true  # Wipe all Wild Dinos (tiny Lag on server for 1 second).
+bot_start_notify  = true  # Bot sends message "Ark Telegram Bot Started" when starting.
+broadcast         = true  # Not Implemented yet.
 
 
 # Ark RCON Server Settings.
