@@ -38,12 +38,14 @@ let
   ark_cmd_saveworld    = parseBool(config_ini.getSectionValue("ark_commands", "saveworld"))
   ark_cmd_listplayers  = parseBool(config_ini.getSectionValue("ark_commands", "listplayers"))
   ark_cmd_getchat      = parseBool(config_ini.getSectionValue("ark_commands", "getchat"))
+  ark_cmd_admin_cmd    = parseBool(config_ini.getSectionValue("ark_commands", "getchat_admin_cmd"))
   ark_cmd_day          = parseBool(config_ini.getSectionValue("ark_commands", "day"))
   ark_cmd_night        = parseBool(config_ini.getSectionValue("ark_commands", "night"))
   ark_cmd_lastversion  = parseBool(config_ini.getSectionValue("ark_commands", "lastversion"))
   ark_cmd_status       = parseBool(config_ini.getSectionValue("ark_commands", "status"))
   ark_cmd_mods         = parseBool(config_ini.getSectionValue("ark_commands", "mods"))
-  ark_cmd_wilddinowipe = parseBool(config_ini.getSectionValue("ark_commands", "wilddinowipe"))
+  ark_cmd_destroywilddinos = parseBool(config_ini.getSectionValue("ark_commands", "destroywilddinos"))
+  ark_bot_start_notify = parseBool(config_ini.getSectionValue("ark_commands", "bot_start_notify"))
 
   rcon_ip   = config_ini.getSectionValue("rcon_server", "ip")
   rcon_port = config_ini.getSectionValue("rcon_server", "port")
@@ -142,7 +144,14 @@ when defined(linux):
   proc getchatHandler(bot: Telebot): CommandCallback =
     let cmd = rcon_cmd & "getchat"
     handlerizer:
-      let message = fmt"""`{execCmdEx(cmd)[0]}`"""
+      var getchat_output = execCmdEx(cmd)[0]
+      if not ark_cmd_admin_cmd:
+        var filtered_getchat_output = ""
+        for chat_line in getchat_output.splitLines():
+          if not chat_line.strip.startsWith("ADMIN CMD: "):
+            filtered_getchat_output.add(chat_line & "\n")
+        getchat_output = filtered_getchat_output.strip
+      let message = fmt"""{getchat_output}"""
 
   proc dayHandler(bot: Telebot): CommandCallback =
     let cmd = rcon_cmd & "'settimeofday 12:00'"
@@ -154,8 +163,8 @@ when defined(linux):
     handlerizer:
       let message = fmt"""`{execCmdEx(cmd)[0]}`"""
 
-  proc wilddinowipeHandler(bot: Telebot): CommandCallback =
-    let cmd = rcon_cmd & "wilddinowipe"
+  proc destroywilddinosHandler(bot: Telebot): CommandCallback =
+    let cmd = rcon_cmd & "destroywilddinos"
     handlerizer:
       let message = fmt"""`{execCmdEx(cmd)[0]}`"""
 
@@ -209,8 +218,9 @@ proc main*() {.async.} =
     if ark_cmd_lastversion:  bot.onCommand("lastversion",  lastversionHandler(bot))
     if ark_cmd_status:       bot.onCommand("status",       statusHandler(bot))
     if ark_cmd_mods:         bot.onCommand("mods",         modsHandler(bot))
-    if ark_cmd_wilddinowipe: bot.onCommand("wilddinowipe", wilddinowipeHandler(bot))
+    if ark_cmd_destroywilddinos: bot.onCommand("destroywilddinos", destroywilddinosHandler(bot))
 
+    if ark_bot_start_notify: echo execCmdEx(rcon_cmd & "'broadcast Ark_Telegram_Bot_Started.'")
     try:
       discard nice(19.cint)  # Smooth CPU priority.
     except Exception:
