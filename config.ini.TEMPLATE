@@ -6,6 +6,15 @@ polling_interval = 1
 terminal_colors = true
 
 
+[openexchangerates]
+# OpenExchangeRates API Key, get for Free at https://openexchangerates.org/account/app-ids
+api_key = ""
+# List of currencies the Bot will show when the Command is used, standard 3 letter names, order does not matter (full list is too long, so you must choose a few).
+currencies = "EUR,BGP,RUB,ARS,BRL,CNY,JPY,BTC,ETH,LTC,DOGE,XAU"
+# Prices are floats, true rounds to 2 decimals, false not round (+6 decimals).
+round_prices = true
+
+
 # Enable / Disable builtin basic Commands.
 [commands]
 help     = true
@@ -25,6 +34,41 @@ lshw      = true
 lsusb     = true
 lspci     = true
 public_ip = true      # Allow any user to see the current Servers Public IP.
+
+
+# Enable / Disable User-provided Bash Plugin Commands, max 10 plugins, empty string = Disabled.
+[bash_plugin_commands]
+bash_plugin0_name    = ""
+bash_plugin0_command = ""
+bash_plugin1_name    = ""
+bash_plugin1_command = ""
+bash_plugin2_name    = ""
+bash_plugin2_command = ""
+bash_plugin3_name    = ""
+bash_plugin3_command = ""
+bash_plugin4_name    = ""
+bash_plugin4_command = ""
+bash_plugin5_name    = ""
+bash_plugin5_command = ""
+bash_plugin6_name    = ""
+bash_plugin6_command = ""
+bash_plugin7_name    = ""
+bash_plugin7_command = ""
+bash_plugin8_name    = ""
+bash_plugin8_command = ""
+bash_plugin9_name    = ""
+bash_plugin9_command = ""
+# bash_pluginX_name    = "custom"   # Example Name.        --\___Example Plugin.
+# bash_pluginX_command = "echo 42"  # Example Bash Command --/
+
+
+# Share Coordinates of Geographical Points Of Interest (POI) using Latitude,Longitude, 0.0 = Disabled.
+# This is to share location info, so players know wheres the server from, shows a tiny Map.
+[geo_location_sharing]
+geo_plugin0_lat  = 0.0  # Latitude GPS Coordinates of your Ark Server Hosting provider.
+geo_plugin0_lon  = 0.0  # Longitude GPS Coordinates of your Ark Server Hosting provider.
+# geo_plugin0_lat = 42.00 ------> Example Geo POI plugin, /serverlocation gives Lat=42.0, Lon=66.6
+# geo_plugin0_lon = 66.66 ---/
 
 
 # Enable / Disable Ark Survival Evolved Commands.
