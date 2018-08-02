@@ -28,6 +28,8 @@ let
   cmd_uptime   = parseBool(config_ini.getSectionValue("commands", "uptime"))
   cmd_donate   = parseBool(config_ini.getSectionValue("commands", "donate"))
   cmd_datetime = parseBool(config_ini.getSectionValue("commands", "datetime"))
+  cmd_rcon     = parseBool(config_ini.getSectionValue("commands", "rcon"))
+  cmd_steam    = parseBool(config_ini.getSectionValue("commands", "steam"))
 
   server_cmd_ip    = parseBool(config_ini.getSectionValue("linux_server_admin_commands", "ip"))
   server_cmd_df    = parseBool(config_ini.getSectionValue("linux_server_admin_commands", "df"))
@@ -160,6 +162,23 @@ proc geoHandler(bot: Telebot, latitud, longitud: float): CommandCallback =
       latitud = latitud
       longitud = longitud
 
+proc rconHandler(bot: Telebot): CommandCallback =
+  let
+    rcon_ip   = rcon_ip
+    rcon_port = rcon_port
+    rcon_pass = rcon_pass
+  handlerizer():
+    let message = fmt"*RCON IP:* `{rcon_ip}`, *RCON PORT:* `{rcon_port}`, *RCON PASS:* `{rcon_pass}`."
+
+proc steamHandler(bot: Telebot): CommandCallback =
+  handlerizer:
+    let
+      responz = await newAsyncHttpClient().get(pub_ip_api)
+      publ_ip = await responz.body
+      respon = await newAsyncHttpClient().get("http://api.steampowered.com/ISteamApps/GetServersAtAddress/v0001?addr=" & $publ_ip)
+      steam_api = await respon.body
+      message = fmt"*Steam API Response:* `{steam_api}`"
+
 
 when defined(linux):
   proc dfHandler(bot: Telebot): CommandCallback =
@@ -259,6 +278,8 @@ proc main*() {.async.} =
   if cmd_uptime:   bot.onCommand("uptime", uptimeHandler(bot))
   if cmd_donate:   bot.onCommand("donate", donateHandler(bot))
   if cmd_datetime: bot.onCommand("datetime", datetimeHandler(bot))
+  if cmd_rcon:     bot.onCommand("rcon", rconHandler(bot))
+  if cmd_steam:    bot.onCommand("steam", steamHandler(bot))
   if oer_api_key != "": bot.onCommand("dollar", dollarHandler(bot))
   if cmd_geo0.lat != 0.0 and cmd_geo0.lon != 0.0: bot.onCommand("serverlocation", geoHandler(bot, cmd_geo0.lat, cmd_geo0.lon))
 
