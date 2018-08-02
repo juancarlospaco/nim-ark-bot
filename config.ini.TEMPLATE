@@ -23,6 +23,8 @@ about    = true
 uptime   = true
 donate   = true
 datetime = true
+rcon     = true
+steam    = true
 
 
 # Enable / Disable Server Linux-only SysAdmin-only Commands (free,df,lshw,etc)
