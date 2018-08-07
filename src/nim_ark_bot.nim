@@ -103,6 +103,28 @@ template handlerizerDocument(body: untyped): untyped =
   discard bot.send(document)
 
 
+proc handleUpdate(bot: TeleBot, update: Update) {.async.} =
+  ## This function implements basic Chat from Telegram to Ark, via in-game Chat.
+  inc counter
+  var response = update.message.get
+  if response.text.isSome:
+    let
+      who = response.chat.first_name.get.strip & response.chat.last_name.get.strip
+      wat = response.text.get.strip.toLowerAscii
+      cmd = rcon_cmd & quoteShell("serverchat $1:$2.".format(who, wat))
+      message0 = "💬 *$1 ➡️ ARK:* $2.".format(who, wat)
+      message1 = "💬 *ARK ➡️ $1:* `$2`.".format(who, execCmdEx(cmd)[0].strip)
+    var
+      msg0 = newMessage(response.chat.id, message0)
+      msg1 = newMessage(response.chat.id, message1)
+    msg0.disableNotification = true
+    msg1.disableNotification = true
+    msg0.parseMode = "markdown"
+    msg1.parseMode = "markdown"
+    discard await bot.send(msg0)
+    discard await bot.send(msg1)
+
+
 proc public_ipHandler(bot: Telebot, update: Command) {.async.} =
   handlerizer():
     let
@@ -279,6 +301,7 @@ proc main*() {.async.} =
   createDir(static_plugins_folder)
 
   let bot = newTeleBot(api_key)
+  bot.onUpdate(handleUpdate)
 
   if cmd_help:     bot.onCommand("help", helpHandler)
   if cmd_ping:     bot.onCommand("ping", pingHandler)
