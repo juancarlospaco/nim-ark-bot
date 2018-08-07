@@ -4,6 +4,16 @@ api_key = ""
 polling_interval = 1
 # Terminal Colors (Color Blind support).
 terminal_colors = true
+# Full path to steamcmd.sh
+steamcmd_path = "~/steamcmd/steamcmd.sh"
+# Full path to ARK Mods folder.
+ark_path = "~/steamcmd/steamapps/common/ARK"  # /steamapps/workshop/content/346110
+# Bash command to Kill the Ark Server.
+kill_ark = "true"
+# Bash command to Start the Ark Server.
+start_ark = "true"
+# Mod list, same as activeMods from gameUserSettings.ini (this will be automated on the future).
+mod_list = ""
 
 
 [openexchangerates]
