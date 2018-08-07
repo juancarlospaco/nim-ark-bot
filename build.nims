@@ -4,7 +4,7 @@
 
 
 echo "Building for Linux"
-exec "nim c -d:release -d:ssl --app:console --opt:size --out:build/nim_ark_bot nim_ark_bot.nim"
+exec "nim c -d:release -d:ssl --app:console --opt:size --out:build/nim_ark_bot src/nim_ark_bot.nim"
 exec "strip --verbose -ss build/nim_ark_bot"
 exec "upx --best --ultra-brute build/nim_ark_bot"
 exec "sha1sum --tag build/nim_ark_bot > build/nim_ark_bot.sha1"
