@@ -10,8 +10,6 @@ steamcmd_path = "~/steamcmd/steamcmd.sh"
 ark_path = "~/steamcmd/steamapps/common/ARK"  # /steamapps/workshop/content/346110
 # Bash command to Kill the Ark Server.
 kill_ark = "true"
-# Bash command to Start the Ark Server.
-start_ark = "true"
 # Mod list, same as activeMods from gameUserSettings.ini (this will be automated on the future).
 mod_list = ""
 

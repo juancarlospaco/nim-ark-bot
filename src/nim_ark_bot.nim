@@ -27,7 +27,6 @@ let
   steamcmd_path = config_ini.getSectionValue("", "steamcmd_path")
   ark_path = config_ini.getSectionValue("", "ark_path")
   kill_ark = config_ini.getSectionValue("", "kill_ark")
-  start_ark = config_ini.getSectionValue("", "start_ark")
   mods_list = config_ini.getSectionValue("", "mods_list")
 
   cmd_help     = parseBool(config_ini.getSectionValue("commands", "help"))
@@ -326,12 +325,9 @@ when defined(linux):
                 cmd = "true"
               (output, exitCode) = execCmdEx(cmd)         # Update Mods.
               echo (output, exitCode)
-              if exitCode == 0:
-                (output, exitCode) = execCmdEx(start_ark) # Start Ark Server.
-                echo (output, exitCode)
-                if exitCode == 0:
-                  handlerizer:
-                    let message = "♻️ *Ark Server and Mods Updated.* ♻️"
+              if exitCode == 0:                           # Auto-Restart script should Start Ark.
+                handlerizer:
+                  let message = "♻️ *Ark Server and Mods Updated.* ♻️"
 
 
 proc main*() {.async.} =
