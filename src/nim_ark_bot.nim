@@ -72,6 +72,7 @@ var counter: int
 
 
 template handlerizer(body: untyped): untyped =
+  ## Template to send simple markdown chat text messages.
   inc counter
   body
   var msg = newMessage(update.message.chat.id, $message.strip())
@@ -80,6 +81,7 @@ template handlerizer(body: untyped): untyped =
   discard bot.send(msg)
 
 template handlerizerLocation(body: untyped): untyped =
+  ## Template to send Geo Location sharing.
   inc counter
   body
   let
@@ -95,13 +97,13 @@ template handlerizerLocation(body: untyped): untyped =
   discard bot.send(msg)
 
 template handlerizerDocument(body: untyped): untyped =
+  ## Template to send attached Document file.
   inc counter
   body
   var document = newDocument(update.message.chat.id, "file://" & document_file_path)
   document.caption = document_caption.strip
   document.disableNotification = true
   discard bot.send(document)
-
 
 proc handleUpdate(bot: TeleBot, update: Update) {.async.} =
   ## This function implements basic Chat from Telegram to Ark, via in-game Chat.
@@ -112,10 +114,9 @@ proc handleUpdate(bot: TeleBot, update: Update) {.async.} =
       who = response.chat.first_name.get.strip & response.chat.last_name.get.strip
       wat = response.text.get.strip.toLowerAscii
       cmd = rcon_cmd & quoteShell("serverchat $1:$2.".format(who, wat))
-      message0 = "💬 *$1 ➡️ ARK:* $2.".format(who, wat)
       message1 = "💬 *ARK ➡️ $1:* `$2`.".format(who, execCmdEx(cmd)[0].strip)
     var
-      msg0 = newMessage(response.chat.id, message0)
+      msg0 = newMessage(response.chat.id, "💬 *$1 ➡️ ARK:* $2.".format(who, wat))
       msg1 = newMessage(response.chat.id, message1)
     msg0.disableNotification = true
     msg1.disableNotification = true
@@ -124,40 +125,39 @@ proc handleUpdate(bot: TeleBot, update: Update) {.async.} =
     discard await bot.send(msg0)
     discard await bot.send(msg1)
 
-
 proc public_ipHandler(bot: Telebot, update: Command) {.async.} =
-  handlerizer():
+  handlerizer:
     let
       responz = await newAsyncHttpClient().get(pub_ip_api)  # await response
       publ_ip = await responz.body                          # await body
       message = fmt"*Server Public IP Address:* `{publ_ip}`"
 
 proc uptimeHandler(bot: Telebot, update: Command) {.async.} =
-  handlerizer():
+  handlerizer:
     let message = fmt"*Uptime:* `{cpuTime() - start_time}` ⏰"
 
 proc pingHandler(bot: Telebot, update: Command) {.async.} =
-  handlerizer():
+  handlerizer:
     let message = "*pong*"
 
 proc datetimeHandler(bot: Telebot, update: Command) {.async.} =
-  handlerizer():
+  handlerizer:
     let message = $now()
 
 proc aboutHandler(bot: Telebot, update: Command) {.async.} =
-  handlerizer():
+  handlerizer:
     let message = about_texts & $counter
 
 proc helpHandler(bot: Telebot, update: Command) {.async.} =
-  handlerizer():
+  handlerizer:
     let message = helps_texts
 
 proc donateHandler(bot: Telebot, update: Command) {.async.} =
-  handlerizer():
+  handlerizer:
     let message = readFile("donate_text.md")
 
 proc modsHandler(bot: Telebot, update: Command) {.async.} =
-  handlerizer():
+  handlerizer:
     let message = readFile("mods_list.md")
 
 proc dollarHandler(bot: Telebot, update: Command) {.async.} =
@@ -168,12 +168,12 @@ proc dollarHandler(bot: Telebot, update: Command) {.async.} =
   for crrncy in money_json.pairs:
     if crrncy[0] in oer_currenc:
       dineros.add fmt"*{crrncy[0]}* _{names_json[crrncy[0]]}_: `{crrncy[1]}`,  "
-  handlerizer():
+  handlerizer:
     let message = dineros
 
 proc geoHandler(latitud, longitud: float,): CommandCallback =
   proc cb(bot: Telebot, update: Command) {.async.} =
-    handlerizerLocation():
+    handlerizerLocation:
       let
         latitud = latitud
         longitud = longitud
@@ -181,7 +181,7 @@ proc geoHandler(latitud, longitud: float,): CommandCallback =
 
 proc staticHandler(static_file: string): CommandCallback =
   proc cb(bot: Telebot, update: Command) {.async.} =
-    handlerizerDocument():
+    handlerizerDocument:
       let
         document_file_path = static_file
         document_caption   = static_file
@@ -192,7 +192,7 @@ proc rconHandler(bot: Telebot, update: Command) {.async.} =
     rcon_ip   = rcon_ip
     rcon_port = rcon_port
     rcon_pass = rcon_pass
-  handlerizer():
+  handlerizer:
     let message = fmt"*RCON IP:* `{rcon_ip}`, *RCON PORT:* `{rcon_port}`, *RCON PASS:* `{rcon_pass}`."
 
 proc steamHandler(bot: Telebot, update: Command) {.async.} =
@@ -207,27 +207,27 @@ proc steamHandler(bot: Telebot, update: Command) {.async.} =
 
 when defined(linux):
   proc dfHandler(bot: Telebot, update: Command) {.async.} =
-    handlerizer():
+    handlerizer:
       let message = fmt"""`{execCmdEx("df --human-readable --local --total --print-type")[0]}`"""
 
   proc freeHandler(bot: Telebot, update: Command) {.async.} =
-    handlerizer():
+    handlerizer:
       let message = fmt"""`{execCmdEx("free --human --total --giga")[0]}`"""
 
   proc ipHandler(bot: Telebot, update: Command) {.async.} =
-    handlerizer():
+    handlerizer:
       let message = fmt"""`{execCmdEx("ip -brief address")[0]}`"""
 
   proc lshwHandler(bot: Telebot, update: Command) {.async.} =
-    handlerizer():
+    handlerizer:
       let message = fmt"""`{execCmdEx("lshw -short")[0]}`"""
 
   proc lsusbHandler(bot: Telebot, update: Command) {.async.} =
-    handlerizer():
+    handlerizer:
       let message = fmt"""`{execCmdEx("lsusb")[0]}`"""
 
   proc lspciHandler(bot: Telebot, update: Command) {.async.} =
-    handlerizer():
+    handlerizer:
       let message = fmt"""`{execCmdEx("lspci")[0]}`"""
 
   proc saveworldHandler(bot: Telebot, update: Command) {.async.} =
@@ -283,7 +283,7 @@ when defined(linux):
 
   proc cmd_bashHandler(command: string,): CommandCallback =
     proc cb(bot: Telebot, update: Command) {.async.} =
-      handlerizer():
+      handlerizer:
         let message = fmt"""`{execCmdEx(command)[0]}`"""
     return cb
 
@@ -338,7 +338,7 @@ proc main*() {.async.} =
     if ark_cmd_mods:         bot.onCommand("mods",        modsHandler)
     if ark_cmd_destroywilddinos: bot.onCommand("destroywilddinos", destroywilddinosHandler)
 
-    if ark_bot_start_notify: echo execCmdEx(rcon_cmd & "'broadcast Ark_Telegram_Bot_Started.'")
+    if ark_bot_start_notify: echo execCmdEx(rcon_cmd & quoteShell("broadcast Ark_Telegram_Bot_Started."))
 
     for bash_file in walkFiles(bash_plugins_folder / "/*.sh"):
       let (dir, name, ext) = splitFile(bash_file)
