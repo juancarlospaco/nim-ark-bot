@@ -24,6 +24,11 @@ let
   config_ini  = loadConfig("config.ini")
   api_key     = config_ini.getSectionValue("", "api_key")
   cli_colors  = parseBool(config_ini.getSectionValue("", "terminal_colors"))
+  steamcmd_path = config_ini.getSectionValue("", "steamcmd_path")
+  ark_path = config_ini.getSectionValue("", "ark_path")
+  kill_ark = config_ini.getSectionValue("", "kill_ark")
+  start_ark = config_ini.getSectionValue("", "start_ark")
+  mods_list = config_ini.getSectionValue("", "mods_list")
 
   cmd_help     = parseBool(config_ini.getSectionValue("commands", "help"))
   cmd_ping     = parseBool(config_ini.getSectionValue("commands", "ping"))
@@ -33,6 +38,7 @@ let
   cmd_datetime = parseBool(config_ini.getSectionValue("commands", "datetime"))
   cmd_rcon     = parseBool(config_ini.getSectionValue("commands", "rcon"))
   cmd_steam    = parseBool(config_ini.getSectionValue("commands", "steam"))
+  cmd_updateark = parseBool(config_ini.getSectionValue("commands", "updateark"))
 
   server_cmd_ip    = parseBool(config_ini.getSectionValue("linux_server_admin_commands", "ip"))
   server_cmd_df    = parseBool(config_ini.getSectionValue("linux_server_admin_commands", "df"))
@@ -281,11 +287,51 @@ when defined(linux):
         status =  await responz.body                           # await body
         message = fmt"`{status}`"
 
-  proc cmd_bashHandler(command: string,): CommandCallback =
+  proc cmd_bashHandler(command: string): CommandCallback =
     proc cb(bot: Telebot, update: Command) {.async.} =
       handlerizer:
         let message = fmt"""`{execCmdEx(command)[0]}`"""
     return cb
+
+  proc updatearkHandler(bot: Telebot, update: Command) {.async.} =
+    ## This function will try to Update Ark & Ark Mods, lots of trial and error.
+    var
+      cmd = rcon_cmd & quoteShell("broadcast Updating_Ark_Server_Now.")
+      output: string
+      exitCode: int
+    (output, exitCode) = execCmdEx(cmd)                   # Broadcast Update.
+    echo (output, exitCode)
+    if exitCode == 1:
+      cmd = rcon_cmd & "saveworld"
+      (output, exitCode) = execCmdEx(cmd)                 # Save the world.
+      echo (output, exitCode)
+      if exitCode == 1:
+        cmd = rcon_cmd & quoteShell("broadcast World_Saved,Now_Shutting_Down_Server.")
+        (output, exitCode) = execCmdEx(cmd)               # Broadcast shutdown.
+        echo (output, exitCode)
+        if exitCode == 1:
+          (output, exitCode) = execCmdEx(kill_ark)        # Kill Ark Server.
+          echo (output, exitCode)
+          if exitCode == 0:
+            cmd = fmt"{steamcmd_path} +login anonymous +force_install_dir {ark_path} +app_update 376030 +quit"
+            (output, exitCode) = execCmdEx(cmd)           # Update Ark.
+            echo (output, exitCode)
+            if exitCode == 0:
+              if mods_list != "":  # Server has Mods.
+                var modupdatelist: string
+                for modid in mods_list.split(","):
+                  modupdatelist.add(fmt"+workshop_download_item 346110 {modid} ")
+                cmd = fmt"{steamcmd_path} +login anonymous +force_install_dir {ark_path} {modupdatelist} +quit"
+              else:  # Server has no Mods?.
+                cmd = "true"
+              (output, exitCode) = execCmdEx(cmd)         # Update Mods.
+              echo (output, exitCode)
+              if exitCode == 0:
+                (output, exitCode) = execCmdEx(start_ark) # Start Ark Server.
+                echo (output, exitCode)
+                if exitCode == 0:
+                  handlerizer:
+                    let message = "♻️ *Ark Server and Mods Updated.* ♻️"
 
 
 proc main*() {.async.} =
@@ -336,6 +382,7 @@ proc main*() {.async.} =
     if ark_cmd_lastversion:  bot.onCommand("lastversion", lastversionHandler)
     if ark_cmd_status:       bot.onCommand("status",      statusHandler)
     if ark_cmd_mods:         bot.onCommand("mods",        modsHandler)
+    if cmd_updateark:        bot.onCommand("updateark",   updatearkHandler)
     if ark_cmd_destroywilddinos: bot.onCommand("destroywilddinos", destroywilddinosHandler)
 
     if ark_bot_start_notify: echo execCmdEx(rcon_cmd & quoteShell("broadcast Ark_Telegram_Bot_Started."))
