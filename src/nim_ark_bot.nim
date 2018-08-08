@@ -25,9 +25,10 @@ let
   api_key     = config_ini.getSectionValue("", "api_key")
   cli_colors  = parseBool(config_ini.getSectionValue("", "terminal_colors"))
   steamcmd_path = config_ini.getSectionValue("", "steamcmd_path")
+  mods_list = keepItIf(lines(config_ini.getSectionValue("", "gameusersettings_path")), it.startsWith("ActiveMods="))
+  steamcmd_validate = parseBool(config_ini.getSectionValue("", "steamcmd_validate"))
   ark_path = config_ini.getSectionValue("", "ark_path")
   kill_ark = config_ini.getSectionValue("", "kill_ark")
-  mods_list = config_ini.getSectionValue("", "mods_list")
 
   cmd_help     = parseBool(config_ini.getSectionValue("commands", "help"))
   cmd_ping     = parseBool(config_ini.getSectionValue("commands", "ping"))
@@ -74,6 +75,9 @@ let
                         round_float: oer_round, prettyprint: false, show_alternative: true)
 
 var counter: int
+
+echo "mods_list"
+echo $mods_list
 
 
 template handlerizer(body: untyped): untyped =
@@ -296,8 +300,11 @@ when defined(linux):
     ## This function will try to Update Ark & Ark Mods, lots of trial and error.
     var
       cmd = rcon_cmd & quoteShell("broadcast Updating_Ark_Server_Now.")
+      validate = if steamcmd_validate: "validate " else: ""
       output, message: string
       exitCode: int
+    handlerizer:
+      message = "♻️ *Ark Server and Mods Updater:* Update takes a long time... ♻️"
     (output, exitCode) = execCmdEx(cmd)                   # Broadcast Update.
     handlerizer:
       message = "*Broadcasting 'Updating Ark Server':* `$1`".format(output)
@@ -312,28 +319,31 @@ when defined(linux):
         handlerizer:
           message = "*Broadcasting 'Shutting Down Server':* `$1`".format(output)
         if exitCode == 1:
-          (output, exitCode) = execCmdEx(kill_ark)        # Kill Ark Server.
-          handlerizer:
-            message = "*Shutting Down Server:* `$1`".format(output)
+          if kill_ark != "":
+            (output, exitCode) = execCmdEx(kill_ark)        # Kill Ark Server.
+            handlerizer:
+              message = "*Shutting Down the Ark Server:* `$1`".format(output)
+          else:
+            exitCode = 0
           if exitCode == 0:
-            cmd = fmt"{steamcmd_path} +login anonymous +force_install_dir {ark_path} +app_update 376030 +quit"
+            cmd = fmt"{steamcmd_path} +login anonymous +force_install_dir {ark_path} +app_update 376030 {validate}+quit"
             (output, exitCode) = execCmdEx(cmd)           # Update Ark.
             handlerizer:
-              message = "*Updating Ark Server itself:* `$1`".format(output)
+              message = "*Updating the Ark Server itself:* `$1`".format(output)
             if exitCode == 0:
               if mods_list != "":  # Server has Mods.
                 var modupdatelist: string
                 for modid in mods_list.split(","):
                   modupdatelist.add(fmt"+workshop_download_item 346110 {modid} ")
-                cmd = fmt"{steamcmd_path} +login anonymous +force_install_dir {ark_path} {modupdatelist} +quit"
+                cmd = fmt"{steamcmd_path} +login anonymous +force_install_dir {ark_path} {modupdatelist} {validate}+quit"
+                (output, exitCode) = execCmdEx(cmd)         # Update Mods.
+                handlerizer:
+                  message = "*Updating Ark Server MODs:* `$1`".format(output)
               else:  # Server has no Mods?.
-                cmd = "true"
-              (output, exitCode) = execCmdEx(cmd)         # Update Mods.
-              handlerizer:
-                message = "*Updating Ark Server MODs:* `$1`".format(output)
+                exitCode = 0
               if exitCode == 0:                           # Auto-Restart script should Start Ark.
                 handlerizer:
-                  let message = "♻️ *Ark Server and Mods Updated!.* ♻️"
+                  message = "♻️ *Ark Server and Mods Updated!:* OK, Completed. ♻️"
 
 
 proc main*() {.async.} =

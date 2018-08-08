@@ -5,13 +5,15 @@ polling_interval = 1
 # Terminal Colors (Color Blind support).
 terminal_colors = true
 # Full path to steamcmd.sh
-steamcmd_path = "~/steamcmd/steamcmd.sh"
+steamcmd_path = "/home/steam/steamcmd/steamcmd.sh"
+# Validate ARK downloads (adds "validate"" on steamcmd commands).
+steamcmd_validate = true
+# Full path to gameUserSettings.ini file.
+gameusersettings_path = "/home/steam/ARK/ShooterGame/Saved/Config/LinuxServer/GameUserSettings.ini"
 # Full path to ARK Mods folder.
-ark_path = "~/steamcmd/steamapps/common/ARK"  # /steamapps/workshop/content/346110
+ark_path = "/home/steam/ARK"
 # Bash command to Kill the Ark Server.
-kill_ark = "true"
-# Mod list, same as activeMods from gameUserSettings.ini (this will be automated on the future).
-mod_list = ""
+kill_ark = ""
 
 
 [openexchangerates]
@@ -33,6 +35,7 @@ donate   = true
 datetime = true
 rcon     = true
 steam    = true
+updateark = true
 
 
 # Enable / Disable Server Linux-only SysAdmin-only Commands (free,df,lshw,etc)
