@@ -14,6 +14,11 @@
 🔵 /datetime    Fecha y Hora.
 🔵 /donate      Info de Donaciones.
 🔵 /help        Ayuda.
+🔵 /steam       Server en Steam API.
+🔵 /serverlocation Server Geo Location.
+🔵 /dollar      Precio de Divisas.
+🔵 /updateark   Actualizar Ark y MODs.
+🔵 /destroywilddinos Destruir Dinos Salvajes.
 
 *Help:*
 
@@ -31,3 +36,8 @@
 🔵 /datetime    Current Date & Time.
 🔵 /help        This Help.
 🔵 /donate      Info about Donations.
+🔵 /steam       Steam API Server Status.
+🔵 /serverlocation Server Geo Location.
+🔵 /dollar      Exchange Prices.
+🔵 /updateark   Update Ark & MODs.
+🔵 /destroywilddinos Destroy Wild Dinos.
