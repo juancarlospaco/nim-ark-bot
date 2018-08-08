@@ -77,6 +77,8 @@ var
   counter: int
   mods_list: seq[string]
 try:
+  createDir(bash_plugins_folder)
+  createDir(static_plugins_folder)
   for line in readFile("GameUserSettings.ini").splitLines:
     if line.startsWith("ActiveMods="):
       mods_list = line.replace("ActiveMods=", "").split(',')
@@ -367,9 +369,6 @@ proc main*() {.async.} =
     setForegroundColor([fgRed, fgGreen, fgYellow, fgBlue, fgMagenta, fgCyan, fgWhite].rand)
 
   addHandler(newConsoleLogger(fmtStr="$time $levelname "))
-
-  createDir(bash_plugins_folder)
-  createDir(static_plugins_folder)
 
   let bot = newTeleBot(api_key)
   bot.onUpdate(handleUpdate)
