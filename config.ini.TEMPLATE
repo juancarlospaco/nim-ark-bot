@@ -1,7 +1,7 @@
 # Telegram API Key, @BotFather gives this Keys, is like a unique ID for Bots.
 api_key = ""
 # Telegram API Long-Pooling Interval, 1~127 is Valid (int8).
-polling_interval = 1
+polling_interval = 10
 # Terminal Colors (Color Blind support).
 terminal_colors = true
 # Full path to steamcmd.sh
@@ -71,7 +71,6 @@ status            = true  # Show Ark Survival Evolved Network Status.
 mods              = true  # Show list of Mods, from "mods_list.md" file (manual).
 destroywilddinos  = true  # Wipe all Wild Dinos (tiny Lag on server for 1 second).
 bot_start_notify  = true  # Bot sends message "Ark Telegram Bot Started" when starting.
-broadcast         = true  # Not Implemented yet.
 
 
 # Ark RCON Server Settings.
