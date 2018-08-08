@@ -6,7 +6,7 @@ Ark Survival Evolved Dedicated Server Bot uses Telegram Chat API, Nim Programmin
 # Use
 
 1. Extract all files together to any folder (optionally check SHA1 or SHA256 for integrity).
-2. Edit `config.ini` and `donate_text.md` to customize.
+2. Edit `config.ini` to customize.
 3. Run `nim_ark_bot`, talk to your Ark Telegram Bot on any Telegram App or WebApp.
 
 
@@ -109,14 +109,12 @@ all functionalities can be Enabled / Disabled from the `config.ini` anyways.
 The binary executable needs the following files on the same current folder:
 
 - `config.ini`
-- `donate_text.md`
 
 Example:
 
 ```
 /home/user/bot/nim_ark_bot
 /home/user/bot/config.ini
-/home/user/bot/donate_text.md
 ```
 
 **Optional**, you can use any Linux command like `chrt`, `trickle`, `firejails`, `docker`, `rkt` with the Bot too.
