@@ -6,7 +6,7 @@ Ark Survival Evolved Dedicated Server Bot uses Telegram Chat API, Nim Programmin
 # Use
 
 1. Extract all files together to any folder (optionally check SHA1 or SHA256 for integrity).
-2. Edit `config.ini`, `donate_text.md`, `help_text.md`, `mods_list.md` to customize.
+2. Edit `config.ini` and `donate_text.md` to customize.
 3. Run `nim_ark_bot`, talk to your Ark Telegram Bot on any Telegram App or WebApp.
 
 
@@ -53,7 +53,6 @@ nim c -r -d:ssl nim_ark_bot.nim
 
 - Rename the file `config.ini.TEMPLATE` to `config.ini`.
 - Edit the file `config.ini` to set `api_key`, `polling_interval`, etc.
-- Edit the file `help_text.md` to customize **Help** text.
 
 You can hack any of the `*.ini` and `*.md` to customize.
 
@@ -110,7 +109,6 @@ all functionalities can be Enabled / Disabled from the `config.ini` anyways.
 The binary executable needs the following files on the same current folder:
 
 - `config.ini`
-- `help_text.md`
 - `donate_text.md`
 
 Example:
@@ -118,7 +116,6 @@ Example:
 ```
 /home/user/bot/nim_ark_bot
 /home/user/bot/config.ini
-/home/user/bot/help_text.md
 /home/user/bot/donate_text.md
 ```
 
@@ -160,37 +157,6 @@ Example:
 - Does not write anything to Disk.
 - Works with Ark Servers with Dynamic Public IP address.
 - Works with Ark Servers with Fixed Public IP address.
-
-
-### Single File
-
-**Optional**, this is for advanced users only.
-
-If you want to compile to 1 file, without any extra `*.md` files.
-
-On the source code find and remove the lines:
-
-```nim
-helps_texts = readFile("help_text.md")
-coc_text =    readFile("coc_text.md")
-motd_text =   readFile("motd_text.md")
-donate_text = readFile("donate_text.md")
-```
-
-On the source code find and uncomment the lines:
-
-```nim
-helps_texts = staticRead("help_text.md")
-coc_text =    staticRead("coc_text.md")
-motd_text =   staticRead("motd_text.md")
-donate_text = staticRead("donate_text.md")
-```
-
-Recompile, it will Embed all the `*.md` files on the binary executable.
-
-You will need to Recompile to change any content of the `*.md` files.
-
-You can later delete all the `*.md` files.
 
 
 ### Performance Profiling
