@@ -296,25 +296,30 @@ when defined(linux):
     ## This function will try to Update Ark & Ark Mods, lots of trial and error.
     var
       cmd = rcon_cmd & quoteShell("broadcast Updating_Ark_Server_Now.")
-      output: string
+      output, message: string
       exitCode: int
     (output, exitCode) = execCmdEx(cmd)                   # Broadcast Update.
-    echo (output, exitCode)
+    handlerizer:
+      message = "*Broadcasting 'Updating Ark Server':* `$1`".format(output)
     if exitCode == 1:
       cmd = rcon_cmd & "saveworld"
       (output, exitCode) = execCmdEx(cmd)                 # Save the world.
-      echo (output, exitCode)
+      handlerizer:
+        message = "*Executing 'saveworld' on Ark Server:* `$1`".format(output)
       if exitCode == 1:
         cmd = rcon_cmd & quoteShell("broadcast World_Saved,Now_Shutting_Down_Server.")
         (output, exitCode) = execCmdEx(cmd)               # Broadcast shutdown.
-        echo (output, exitCode)
+        handlerizer:
+          message = "*Broadcasting 'Shutting Down Server':* `$1`".format(output)
         if exitCode == 1:
           (output, exitCode) = execCmdEx(kill_ark)        # Kill Ark Server.
-          echo (output, exitCode)
+          handlerizer:
+            message = "*Shutting Down Server:* `$1`".format(output)
           if exitCode == 0:
             cmd = fmt"{steamcmd_path} +login anonymous +force_install_dir {ark_path} +app_update 376030 +quit"
             (output, exitCode) = execCmdEx(cmd)           # Update Ark.
-            echo (output, exitCode)
+            handlerizer:
+              message = "*Updating Ark Server itself:* `$1`".format(output)
             if exitCode == 0:
               if mods_list != "":  # Server has Mods.
                 var modupdatelist: string
@@ -324,10 +329,11 @@ when defined(linux):
               else:  # Server has no Mods?.
                 cmd = "true"
               (output, exitCode) = execCmdEx(cmd)         # Update Mods.
-              echo (output, exitCode)
+              handlerizer:
+                message = "*Updating Ark Server MODs:* `$1`".format(output)
               if exitCode == 0:                           # Auto-Restart script should Start Ark.
                 handlerizer:
-                  let message = "♻️ *Ark Server and Mods Updated.* ♻️"
+                  let message = "♻️ *Ark Server and Mods Updated!.* ♻️"
 
 
 proc main*() {.async.} =
