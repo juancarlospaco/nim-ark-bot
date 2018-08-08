@@ -28,6 +28,7 @@ let
   steamcmd_validate = parseBool(config_ini.getSectionValue("", "steamcmd_validate"))
   ark_path = config_ini.getSectionValue("", "ark_path")
   kill_ark = config_ini.getSectionValue("", "kill_ark")
+  donate_text = config_ini.getSectionValue("", "donate_text")
 
   cmd_help     = parseBool(config_ini.getSectionValue("commands", "help"))
   cmd_ping     = parseBool(config_ini.getSectionValue("commands", "ping"))
@@ -171,7 +172,7 @@ proc helpHandler(bot: Telebot, update: Command) {.async.} =
 
 proc donateHandler(bot: Telebot, update: Command) {.async.} =
   handlerizer:
-    let message = readFile("donate_text.md")
+    let message = donate_text
 
 proc modsHandler(bot: Telebot, update: Command) {.async.} =
   var mods = "*Ark Survival Evolved MODs:* "

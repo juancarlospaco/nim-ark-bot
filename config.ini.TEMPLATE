@@ -14,6 +14,10 @@ gameusersettings_path = "/home/steam/ARK/ShooterGame/Saved/Config/LinuxServer/Ga
 ark_path = "/home/steam/ARK"
 # Bash command to Kill the Ark Server.
 kill_ark = ""
+# MarkDown text for /donate Telegram command, can be empty, can use Markdown.
+donate_text = """
+💸💵💰  *Info about Donations.*  💸💵💰
+"""
 
 
 [openexchangerates]
