@@ -410,11 +410,13 @@ proc main*() {.async.} =
     if cmd_updateark:        bot.onCommand("updateark",   updatearkHandler)
     if ark_cmd_destroywilddinos: bot.onCommand("destroywilddinos", destroywilddinosHandler)
 
-    if ark_bot_start_notify: echo execCmdEx(rcon_cmd & quoteShell("broadcast Ark_Telegram_Bot_Started."))
-
     for bash_file in walkFiles(bash_plugins_folder / "/*.sh"):
       let (dir, name, ext) = splitFile(bash_file)
       bot.onCommand(name.toLowerAscii, cmd_bashHandler(bash_file))
+
+    if ark_bot_start_notify:
+      echo execCmdEx(rcon_cmd & quoteShell("broadcast Ark_Telegram_Bot_Started."))
+      echo execCmdEx(rcon_cmd & quoteShell("serverchat Ark_Telegram_Bot_Started."))
 
     discard nice(19.cint)  # smooth cpu priority
 
