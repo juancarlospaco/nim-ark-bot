@@ -388,7 +388,7 @@ proc main*() {.async.} =
     bot.onCommand("serverlocation", geoHandler(cmd_geo0.lat, cmd_geo0.lon))
 
   for static_file in walkFiles(static_plugins_folder / "/*.*"):
-    let (dir, name, ext) = splitFile(static_file)
+    var (dir, name, ext) = splitFile(static_file)
     bot.onCommand(name.toLowerAscii, staticHandler(static_file))
 
   when defined(linux):
@@ -412,7 +412,7 @@ proc main*() {.async.} =
     if ark_cmd_destroywilddinos: bot.onCommand("destroywilddinos", destroywilddinosHandler)
 
     for bash_file in walkFiles(bash_plugins_folder / "/*.sh"):
-      let (dir, name, ext) = splitFile(bash_file)
+      var (dir, name, ext) = splitFile(bash_file)
       bot.onCommand(name.toLowerAscii, cmd_bashHandler(bash_file))
 
     if ark_bot_start_notify:
