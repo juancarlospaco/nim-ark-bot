@@ -29,6 +29,7 @@ let
   ark_path = config_ini.getSectionValue("", "ark_path")
   kill_ark = config_ini.getSectionValue("", "kill_ark")
   donate_text = config_ini.getSectionValue("", "donate_text")
+  gameusersettings_path = config_ini.getSectionValue("", "gameusersettings_path")
 
   cmd_help     = parseBool(config_ini.getSectionValue("commands", "help"))
   cmd_ping     = parseBool(config_ini.getSectionValue("commands", "ping"))
@@ -80,7 +81,7 @@ var
 try:
   createDir(bash_plugins_folder)
   createDir(static_plugins_folder)
-  for line in readFile("GameUserSettings.ini").splitLines:
+  for line in readFile(gameusersettings_path).splitLines:
     if line.startsWith("ActiveMods="):
       mods_list = line.replace("ActiveMods=", "").split(',')
       break
