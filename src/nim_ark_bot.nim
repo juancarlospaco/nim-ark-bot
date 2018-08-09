@@ -81,10 +81,13 @@ var
 try:
   createDir(bash_plugins_folder)
   createDir(static_plugins_folder)
-  for line in readFile(gameusersettings_path).splitLines:
-    if line.startsWith("ActiveMods="):
-      mods_list = line.replace("ActiveMods=", "").split(',')
-      break
+  if gameusersettings_path != "":
+    for line in readFile(gameusersettings_path).splitLines:
+      if line.startsWith("ActiveMods="):
+        mods_list = line.replace("ActiveMods=", "").split(',')
+        break
+  else:
+    mods_list = @[]
 except Exception:
   mods_list = @[]
   echo "Failed to parse ActiveMods from GameUserSettings.ini, fallback to No MODs."
