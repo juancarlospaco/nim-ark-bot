@@ -266,6 +266,7 @@ when defined(linux):
       let message = fmt"""`{execCmdEx("lspci")[0]}`"""
 
   proc saveworldHandler(bot: Telebot, update: Command) {.async.} =
+    echo execCmdEx(rcon_cmd & quoteShell("serverchat World_Saved"))
     let cmd = rcon_cmd & "saveworld"
     handlerizer:
       let message = fmt"""`{execCmdEx(cmd)[0]}`"""
@@ -281,6 +282,7 @@ when defined(linux):
       let message = fmt"""`{execCmdEx(cmd)[0]}`"""
 
   proc backupHandler(bot: Telebot, update: Command) {.async.} =
+    echo execCmdEx(rcon_cmd & quoteShell("serverchat Ark_Server_Backup_Completed"))
     let
       origin = ark_path / "ShooterGame/Saved"
       destin = ark_path / $now() & "-ark-backup.zip"
@@ -305,16 +307,19 @@ when defined(linux):
       let message = fmt"""{getchat_output}"""
 
   proc dayHandler(bot: Telebot, update: Command) {.async.} =
+    echo execCmdEx(rcon_cmd & quoteShell("serverchat Ark_Time_set_to_Day"))
     let cmd = rcon_cmd & "'settimeofday 12:00'"
     handlerizer:
       let message = fmt"""*Ark In-Game Time = Day.* `{execCmdEx(cmd)[0]}`"""
 
   proc nightHandler(bot: Telebot, update: Command) {.async.} =
+    echo execCmdEx(rcon_cmd & quoteShell("serverchat Ark_Time_set_to_Night"))
     let cmd = rcon_cmd & "'settimeofday 4:00'"
     handlerizer:
       let message = fmt"""*Ark In-Game Time = Night.* `{execCmdEx(cmd)[0]}`"""
 
   proc synctimeHandler(bot: Telebot, update: Command) {.async.} =
+    echo execCmdEx(rcon_cmd & quoteShell("serverchat Ark_Time_set_to_Real_Life_Time"))
     let
       n0w = now()
       cmd = fmt"{rcon_cmd} 'settimeofday {n0w.hour}:{n0w.minute}'"
@@ -322,6 +327,7 @@ when defined(linux):
       let message = fmt"""*Ark In-Game Time = Real Life Time.* `{execCmdEx(cmd)[0]}`"""
 
   proc destroywilddinosHandler(bot: Telebot, update: Command) {.async.} =
+    echo execCmdEx(rcon_cmd & quoteShell("serverchat Ark_Wild_Dinos_Destroyed"))
     let cmd = rcon_cmd & "destroywilddinos"
     handlerizer:
       let message = fmt"""`{execCmdEx(cmd)[0]}`"""
