@@ -40,6 +40,7 @@ let
   cmd_rcon     = parseBool(config_ini.getSectionValue("commands", "rcon"))
   cmd_steam    = parseBool(config_ini.getSectionValue("commands", "steam"))
   cmd_updateark = parseBool(config_ini.getSectionValue("commands", "updateark"))
+  cmd_backup    = parseBool(config_ini.getSectionValue("commands", "backup"))
 
   server_cmd_ip    = parseBool(config_ini.getSectionValue("linux_server_admin_commands", "ip"))
   server_cmd_df    = parseBool(config_ini.getSectionValue("linux_server_admin_commands", "df"))
@@ -53,8 +54,10 @@ let
   ark_cmd_listplayers  = parseBool(config_ini.getSectionValue("ark_commands", "listplayers"))
   ark_cmd_getchat      = parseBool(config_ini.getSectionValue("ark_commands", "getchat"))
   ark_cmd_admin_cmd    = parseBool(config_ini.getSectionValue("ark_commands", "getchat_admin_cmd"))
+  ark_cmd_getgamelog   = parseBool(config_ini.getSectionValue("ark_commands", "getgamelog"))
   ark_cmd_day          = parseBool(config_ini.getSectionValue("ark_commands", "day"))
   ark_cmd_night        = parseBool(config_ini.getSectionValue("ark_commands", "night"))
+  ark_cmd_synctime     = parseBool(config_ini.getSectionValue("ark_commands", "synctime"))
   ark_cmd_lastversion  = parseBool(config_ini.getSectionValue("ark_commands", "lastversion"))
   ark_cmd_status       = parseBool(config_ini.getSectionValue("ark_commands", "status"))
   ark_cmd_mods         = parseBool(config_ini.getSectionValue("ark_commands", "mods"))
@@ -156,11 +159,13 @@ proc public_ipHandler(bot: Telebot, update: Command) {.async.} =
 
 proc uptimeHandler(bot: Telebot, update: Command) {.async.} =
   handlerizer:
-    let message = fmt"*Uptime:* `{cpuTime() - start_time}` ⏰"
+    let message = fmt"""⏰ *Uptime:* ⏰
+    Ark Server:   `{execCmdEx("uptime --pretty")[0]}`
+    Telegram Bot: `{cpuTime() - start_time}`"""
 
 proc pingHandler(bot: Telebot, update: Command) {.async.} =
   handlerizer:
-    let message = "*pong*"
+    let message = fmt"""`{execCmdEx("ping -c 1 -t 1 -W 1 " & ip2ping)[0]}`"""
 
 proc datetimeHandler(bot: Telebot, update: Command) {.async.} =
   handlerizer:
@@ -269,6 +274,23 @@ when defined(linux):
     handlerizer:
       let message = fmt"""`{execCmdEx(cmd)[0]}`"""
 
+  proc getgamelogHandler(bot: Telebot, update: Command) {.async.} =
+    let cmd = rcon_cmd & "GetGameLog"
+    handlerizer:
+      let message = fmt"""`{execCmdEx(cmd)[0]}`"""
+
+  proc backupHandler(bot: Telebot, update: Command) {.async.} =
+    let
+      origin = ark_path / "ShooterGame/Saved"
+      destin = ark_path / $now() & "-ark-backup.zip"
+    var z: ZipArchive
+    discard z.open(destin, fmWrite)
+    for file2zip in walkDirRec(origin):
+      z.addFile(file2zip)
+    z.close
+    handlerizer:
+      let message = fmt"""*Ark Server Backup:* from `{origin}` to `{destin}`."""
+
   proc getchatHandler(bot: Telebot, update: Command) {.async.} =
     let cmd = rcon_cmd & "getchat"
     handlerizer:
@@ -284,12 +306,19 @@ when defined(linux):
   proc dayHandler(bot: Telebot, update: Command) {.async.} =
     let cmd = rcon_cmd & "'settimeofday 12:00'"
     handlerizer:
-      let message = fmt"""`{execCmdEx(cmd)[0]}`"""
+      let message = fmt"""*Ark In-Game Time = Day.* `{execCmdEx(cmd)[0]}`"""
 
   proc nightHandler(bot: Telebot, update: Command) {.async.} =
     let cmd = rcon_cmd & "'settimeofday 4:00'"
     handlerizer:
-      let message = fmt"""`{execCmdEx(cmd)[0]}`"""
+      let message = fmt"""*Ark In-Game Time = Night.* `{execCmdEx(cmd)[0]}`"""
+
+  proc synctimeHandler(bot: Telebot, update: Command) {.async.} =
+    let
+      n0w = now()
+      cmd = fmt"{rcon_cmd} 'settimeofday {n0w.hour}:{n0w.minute}'"
+    handlerizer:
+      let message = fmt"""*Ark In-Game Time = Real Life Time.* `{execCmdEx(cmd)[0]}`"""
 
   proc destroywilddinosHandler(bot: Telebot, update: Command) {.async.} =
     let cmd = rcon_cmd & "destroywilddinos"
@@ -378,14 +407,15 @@ proc main*() {.async.} =
   let bot = newTeleBot(api_key)
   bot.onUpdate(handleUpdate)
 
-  if cmd_help:     bot.onCommand("help", helpHandler)
-  if cmd_ping:     bot.onCommand("ping", pingHandler)
-  if cmd_about:    bot.onCommand("about", aboutHandler)
-  if cmd_uptime:   bot.onCommand("uptime", uptimeHandler)
-  if cmd_donate:   bot.onCommand("donate", donateHandler)
+  if cmd_help:     bot.onCommand("help",     helpHandler)
+  if cmd_ping:     bot.onCommand("ping",     pingHandler)
+  if cmd_about:    bot.onCommand("about",    aboutHandler)
+  if cmd_uptime:   bot.onCommand("uptime",   uptimeHandler)
+  if cmd_donate:   bot.onCommand("donate",   donateHandler)
   if cmd_datetime: bot.onCommand("datetime", datetimeHandler)
-  if cmd_rcon:     bot.onCommand("rcon", rconHandler)
-  if cmd_steam:    bot.onCommand("steam", steamHandler)
+  if cmd_rcon:     bot.onCommand("rcon",     rconHandler)
+  if cmd_steam:    bot.onCommand("steam",    steamHandler)
+  if cmd_backup:   bot.onCommand("backup",   backupHandler)
   if oer_api_key != "": bot.onCommand("dollar", dollarHandler)
   if cmd_geo0.lat != 0.0 and cmd_geo0.lon != 0.0:
     bot.onCommand("serverlocation", geoHandler(cmd_geo0.lat, cmd_geo0.lon))
@@ -406,8 +436,10 @@ proc main*() {.async.} =
     if ark_cmd_saveworld:    bot.onCommand("saveworld",   saveworldHandler)
     if ark_cmd_listplayers:  bot.onCommand("listplayers", listplayersHandler)
     if ark_cmd_getchat:      bot.onCommand("getchat",     getchatHandler)
+    if ark_cmd_getgamelog:   bot.onCommand("getgamelog",  getgamelogHandler)
     if ark_cmd_day:          bot.onCommand("day",         dayHandler)
     if ark_cmd_night:        bot.onCommand("night",       nightHandler)
+    if ark_cmd_synctime:     bot.onCommand("synctime",    synctimeHandler)
     if ark_cmd_lastversion:  bot.onCommand("lastversion", lastversionHandler)
     if ark_cmd_status:       bot.onCommand("status",      statusHandler)
     if ark_cmd_mods:         bot.onCommand("mods",        modsHandler)

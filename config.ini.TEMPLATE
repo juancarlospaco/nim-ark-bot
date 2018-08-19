@@ -14,6 +14,8 @@ gameusersettings_path = "/home/steam/ARK/ShooterGame/Saved/Config/LinuxServer/Ga
 ark_path = "/home/steam/ARK"
 # Bash command to Kill the Ark Server.
 kill_ark = ""
+# IP or Hostname to Ping.
+ip2ping = "8.8.8.8"
 # MarkDown text for /donate Telegram command, can be empty, can use Markdown.
 donate_text = """
 💸💵💰  *Info about Donations.*  💸💵💰
@@ -40,6 +42,7 @@ datetime = true
 rcon     = true
 steam    = true
 updateark = true
+backup    = true
 
 
 # Enable / Disable Server Linux-only SysAdmin-only Commands (free,df,lshw,etc)
@@ -68,8 +71,10 @@ saveworld         = true  # Save the World (tiny Lag on server for 1 second).
 listplayers       = true  # List Online In-Game Players.
 getchat           = true  # Get In-Game Chat.
 getchat_admin_cmd = true  # getchat shows Admin Commands.
+getgamelog        = true  # GetGameLog.
 day               = true  # Make Day In-Game.
 night             = true  # Make Night In-Game.
+synctime          = true  # Sync Time Ark In-Game Time to Real Life Time.
 lastversion       = true  # Show Latest Ark Survival Evolved Version.
 status            = true  # Show Ark Survival Evolved Network Status.
 mods              = true  # Show list of Mods, from "mods_list.md" file (manual).
