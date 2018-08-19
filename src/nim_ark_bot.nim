@@ -1,9 +1,9 @@
 import
   asyncdispatch, httpclient, logging, json, options, ospaths, osproc, parsecfg,
   strformat, strutils, terminal, times, random, posix, os
-import telebot  # nimble install telebot / https://nimble.directory/pkg/telebot / Version 0.3.3
-import openexchangerates  # nimble install openexchangerates  https://github.com/juancarlospaco/nim-openexchangerates
-
+import telebot           # nimble install telebot            https://nimble.directory/pkg/telebot
+import openexchangerates # nimble install openexchangerates  https://github.com/juancarlospaco/nim-openexchangerates
+import zip/zipfiles      # nimble install zip
 
 const
   about_texts = fmt"""*Nim Telegram Bot* 🤖
@@ -30,6 +30,7 @@ let
   kill_ark = config_ini.getSectionValue("", "kill_ark")
   donate_text = config_ini.getSectionValue("", "donate_text")
   gameusersettings_path = config_ini.getSectionValue("", "gameusersettings_path")
+  ip2ping = config_ini.getSectionValue("", "ip2ping")
 
   cmd_help     = parseBool(config_ini.getSectionValue("commands", "help"))
   cmd_ping     = parseBool(config_ini.getSectionValue("commands", "ping"))
