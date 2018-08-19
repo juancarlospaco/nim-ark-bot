@@ -362,6 +362,10 @@ when defined(linux):
     handlerizer:
       message = "♻️ *Ark Server and Mods Updater:* Update takes a long time... ♻️"
     (output, exitCode) = execCmdEx(cmd)                   # Broadcast Update.
+    for i in 9..0:
+      cmd = rcon_cmd & quoteShell("serverchat About_to_Update_Ark_Server: " & $i)
+      echo execCmdEx(cmd)
+      discard sleepAsync(120 * 1000)
     handlerizer:
       message = "*Broadcasting 'Updating Ark Server':* `$1`".format(output)
     if exitCode == 1:
